@@ -5,7 +5,22 @@ import { badRequestHandler, notFoundHandler, forbiddenErrorHandler,internalServe
 
 const server = express()
 
-server.use(cors())
+const whitelist = [process.env.FE_DEV_URL, process.env.FE_PROD_URL]
+
+const corsOpts = {
+    orgin: function (origin, next){
+
+        console.log("current origin:", origin)
+        if (!origin || whitelist.indexOf(origin) !== -1){
+            next(null, true)
+        }else{
+            next(new Error(`Origin ${origin} not allowed!`))
+        }
+    },
+
+}
+
+server.use(cors(corsOpts))
 server.use(express.json())
 
 

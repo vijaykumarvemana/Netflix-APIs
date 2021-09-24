@@ -70,22 +70,57 @@ mediaRoute.delete("/:mediaId", async (req, res, next) => {
     next(error);
   }
 });
-
 mediaRoute.get("/:mediaId/reviews", async (req, res, next) => {
     try {
-        const media = await readMediaa()
-      const mediaa = media.find((m) => m.imdbID === req.params.imdbID);
-      if (!mediaa) {
-        res
-          .status(404)
-          .send({ message: `media with ${req.params.imdbID} is not found!` });
+      const media = await readMedia();
+      const mediaa = media.find((m) => m.mediaId === req.params.mediaId);
+      if (mediaa) {
+        mediaa.reviews = mediaa.reviews || [];
+        res.send(mediaa.reviews);
+      } else {
+        next(createHttpError(404, `media  not found`));
       }
-  
-      media.reviews = media.reviews || [];
-      res.send(media.reviews);
     } catch (error) {
-      res.send(500).send({ message: error.message });
+      next(error);
     }
   });
+  
+  mediaRoute.post("/:mediaId/reviews", async (req, res, next) => {
+    try {
+      const { imdbID } = req.params.mediaId;
+      const errorsList = validationResult(req);
+      if (!errorsList.isEmpty()) {
+        next(createHttpError(400, { errorsList }));
+      } else {
+        const media = await readMedia();
+        const index = media.findIndex((m) => m.mediaId === req.params.mediaId);
+        let mediaToBeUpdated = media[index];
+        mediaToBeUpdated.reviews = mediaToBeUpdated.reviews || [];
+  
+        const newReview = {
+          comment: req.body.comment,
+          rate: req.body.rate,
+          imdbID: uniqid(),
+          elementId: imdbID,
+          createdAt: new Date(),
+        };
+  
+        const updatedMedia = {
+          ...mediaToBeUpdated,
+          reviews: [...mediaToBeUpdated.reviews, newReview],
+        };
+  
+        media[index] = updatedMedia;
+  
+        writeMedia(media);
+  
+        res.send(updatedMedia);
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+  
+
 
 export default mediaRoute;
