@@ -1,0 +1,35 @@
+{
+  "name": "netflix-apis-homework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -e js -r dotenv/config ./src/server.js",
+    "start": "node ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vijaykumarvemana/netflix-apis.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vijaykumarvemana/netflix-apis/issues"
+  },
+  "homepage": "https://github.com/vijaykumarvemana/netflix-apis#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.1",
+    "fs-extra": "^10.0.0",
+    "http-errors": "^1.8.0",
+    "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
